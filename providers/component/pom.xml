@@ -25,10 +25,10 @@
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-sample-provider</artifactId>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-jldap-provider</artifactId>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.sakaiproject</groupId>
 			<artifactId>sakai-kerberos-provider</artifactId>

@@ -163,7 +163,7 @@
 -->
 
 <!-- Uncomment and configure to use the JLDAPDirectoryProvider -->
-	<import resource="jldap-beans.xml" />
+	<!--<import resource="jldap-beans.xml" /> -->
 
 <!-- Uncomment and configure to use the CandidateDetailsProvider -->
 	<import resource="candidate-details.xml" />
@@ -183,6 +183,8 @@
 -->
 
 <!-- Uncomment and configure to use the Federating UserDirectoryProvider. -->
+
+<!--
 
    <bean
   		id="org.sakaiproject.user.api.UserDirectoryProvider"
@@ -219,6 +221,6 @@
 			<constructor-arg value="none" />
 		</bean>
 		</property>
-	</bean>
+	</bean> -->
 
 </beans>
