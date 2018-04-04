@@ -519,61 +519,72 @@ $(document).ready(function() {
 			var url = $('#mm-url').val();
 			if (url !== '' && $('#mm-is-mm').val() === 'true') {
 			    if (mm_testing === 0) {
-				// initial submit for URL. see what we've got
-				if (url.indexOf('<') >= 0) {
-				    // < in the field, it's embed. just show it after filtering
-				    $('#mm-test-embed-results').show();
-				    $('#mm-test-embed-contents').html(filterHtml(url));
-				    mm_testing = 3;
-				    $('.mm-test-reset').show();
-				    $('#mm-display-type').val(1);
-				    return false;
-				}				
-				// not embed. Treat as a url
-				// first normalize it
+					// initial submit for URL. see what we've got
+					
 
-				if (document.URL.indexOf("https:") === 0 && url.trim().match('^http:')) {
-				    // using https: to display and URL starts with http, use warning
-				    alert('Please use URLs starting with https:. URLs starting with http: will not work with some browsers, e.g. Firefox.');
-				}
-				url = url.trim();
-				if (!url.match('^http:') && !url.match('^https:') && !url.match('^/')) {
-				    // assume it's a hostname or hostname/path
-				    url = 'https://' + url;
-				    $('#mm-url').val(url);
-				    $('#mm-test-addedhttps').show();
-				    $('#mm-test-added-url').text(url);
-				}
+					//if trying to use iframe to embed, just get the url from the src
+					if(/.*<\s*iframe.*src\s*=\s*".+?".*>\s*<\/\s*iframe\s*>.*/i.test(url) && !url.includes("youtube")){
+							
+							url = url.match(/src\s*=\s*"(.+?)"/)[1];
+							$('#mm-url').val(url);
+					
+					}
+					if (url.indexOf('<') >= 0) {
+					
+						// < in the field, it's embed. just show it after filtering
+						$('#mm-test-embed-results').show();
+						$('#mm-test-embed-contents').html(filterHtml(url));
+						mm_testing = 3;
+						$('.mm-test-reset').show();
+						$('#mm-display-type').val(1);
+						return false;
+					
+					}
 
-				// see what we've got
-				mimeType = getMimeType(url);
-				$('#mm-mime-type').val(mimeType);
+					// not embed. Treat as a url
+					// first normalize it
+					if (document.URL.indexOf("https:") === 0 && url.trim().match('^http:')) {
+					    // using https: to display and URL starts with http, use warning
+					    alert('Please use URLs starting with https:. URLs starting with http: will not work with some browsers, e.g. Firefox.');
+					}
+					url = url.trim();
+					if (!url.match('^http:') && !url.match('^https:') && !url.match('^/')) {
+					    // assume it's a hostname or hostname/path
+					    url = 'https://' + url;
+					    $('#mm-url').val(url);
+					    $('#mm-test-addedhttps').show();
+					    $('#mm-test-added-url').text(url);
+					}
 
-				// for video or audio MIME types, the normal ShowPage code can handle it.
+					// see what we've got
+					mimeType = getMimeType(url);
+					$('#mm-mime-type').val(mimeType);
 
-				// youtube returns application/youtube, so it gets handled here
-				if (!mimeType.match('^text/html') && !mimeType.match('^application/xhtml+xml')) {
-				    $('#mm-display-type').val(2);
-				    // just submit
-				    return true;
-				}
+					// for video or audio MIME types, the normal ShowPage code can handle it.
 
-				// not video or audio, try oembed. If that doesn't work, IFRAME
-				
-				// create the test link from prototype, because oembed will remove it
-				var testlink = $('#mm-test-prototype').clone();
-				testlink.attr('id', 'mm-test-link');
-				$('#mm-test-prototype').after(testlink);
-				testlink.attr('href', url);
-				$('#mm-test-oembed-results').show();
-				testlink.show();
-				testlink.oembed(null, {maxWidth:300});
-	   
-				mm_testing = 1;
-				$('#mm-display-type').val(3);
-				$('.mm-test-reset').show();
-				$('#mm-test-tryother').show();
-				return false;
+					// youtube returns application/youtube, so it gets handled here
+					if (!mimeType.match('^text/html') && !mimeType.match('^application/xhtml+xml')) {
+					    $('#mm-display-type').val(2);
+					    // just submit
+					    return true;
+					}
+
+					// not video or audio, try oembed. If that doesn't work, IFRAME
+					
+					// create the test link from prototype, because oembed will remove it
+					var testlink = $('#mm-test-prototype').clone();
+					testlink.attr('id', 'mm-test-link');
+					$('#mm-test-prototype').after(testlink);
+					testlink.attr('href', url);
+					$('#mm-test-oembed-results').show();
+					testlink.show();
+					testlink.oembed(null, {maxWidth:300});
+		   
+					mm_testing = 1;
+					$('#mm-display-type').val(3);
+					$('.mm-test-reset').show();
+					$('#mm-test-tryother').show();
+					return false;
 			    }
 			    // for a URL we always return when mm_testing = 0
 			    // with mm_testing = 3, we handle submit normally
